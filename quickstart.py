@@ -87,8 +87,8 @@ with pipeline.sql_client() as c:
     query = f"""
         select p.name, p.age, p.id as parent_id,
             c.name as child_name, c.id as child_id, c._pos as child_order_in_list
-        from `{schema_prefix}_example.my_json_doc` as p
-        left join `{schema_prefix}_example.my_json_doc__children`  as c
+        from `{schema_prefix}_example.json_doc` as p
+        left join `{schema_prefix}_example.json_doc__children`  as c
             on p._record_hash = c._parent_hash
     """
     run_query(query)

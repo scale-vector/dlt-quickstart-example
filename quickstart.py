@@ -27,7 +27,6 @@ credentials = GCPPipelineCredentials.from_services_dict(gcp_credentials_json, sc
 
 # 5a. Instantiate a pipeline
 pipeline = Pipeline(schema_name)
-pipeline.create_pipeline(credentials)
 
 # 5b. Create the pipeline with your credentials
 pipeline.create_pipeline(credentials)
@@ -58,10 +57,10 @@ f.close()
 pipeline.load()
 
 # 8b. Make sure there are no errors
-# now enumerate all complete loads if we have any failed packages
-# complete but failed job will not raise any exceptions
 completed_loads = pipeline.list_completed_loads()
 # print(completed_loads)
+# now enumerate all complete loads if we have any failed packages
+# complete but failed job will not raise any exceptions
 for load_id in completed_loads:
     print(f"Checking failed jobs in {load_id}")
     for job, failed_message in pipeline.list_failed_jobs(load_id):

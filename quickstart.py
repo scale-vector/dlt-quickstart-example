@@ -11,7 +11,7 @@ schema_prefix = 'demo_' + uniq_id()[:4]
 schema_name = 'example'
 
 # 4d. Name your table
-parent_table = 'example_table'
+parent_table = 'json_doc'
 
 # 4e. Specify your schema file location
 schema_file_path = "schema.yml"
@@ -57,8 +57,7 @@ f.close()
 # 8a. Load
 pipeline.load()
 
-# 8b. Optional error handling - print, raise or handle.
-
+# 8b. Make sure there are no errors
 # now enumerate all complete loads if we have any failed packages
 # complete but failed job will not raise any exceptions
 completed_loads = pipeline.list_completed_loads()
@@ -78,11 +77,11 @@ def run_query(query):
 with pipeline.sql_client() as c:
 
     # Query table for parents
-    query = f"SELECT * FROM `{schema_prefix}_example.my_json_doc`"
+    query = f"SELECT * FROM `{schema_prefix}_example.json_doc`"
     run_query(query)
 
     # Query table for children
-    query = f"SELECT * FROM `{schema_prefix}_example.my_json_doc__children` LIMIT 1000"
+    query = f"SELECT * FROM `{schema_prefix}_example.json_doc__children` LIMIT 1000"
     run_query(query)
 
     # Join previous two queries via auto generated keys

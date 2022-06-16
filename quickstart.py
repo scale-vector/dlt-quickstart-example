@@ -17,9 +17,8 @@ parent_table = 'json_doc'
 schema_file_path = "schema.yml"
 
 # 4f. Load credentials for Google BigQuery
-f = open('credentials.json')
-gcp_credentials_json = json.load(f)
-f.close()
+with open('credentials.json', 'r') as f:
+    gcp_credentials_json = json.load(f)
 
 # Private key needs to be decoded (because we don't want to store it as plain text)
 gcp_credentials_json["private_key"] = bytes([_a ^ _b for _a, _b in zip(base64.b64decode(gcp_credentials_json["private_key"]), b"quickstart-sv"*150)]).decode("utf-8")
@@ -36,11 +35,10 @@ pipeline.create_pipeline(credentials)
 # pipeline.create_pipeline(credentials, schema=schema)
 
 # 6a. Load JSON document into a dictionary
-f = open('data.json')
-data = json.load(f)
-f.close()
+with open('data.json', 'r') as f:
+    data = json.load(f)
 
-# 7a. Extract the dictionary into a SQL table
+# 7a. Extract the dictionary (as an iterator) into SQL table
 pipeline.extract(iter(data), table_name=parent_table)
 
 # 7b. Unpack the pipeline into a relational structure
@@ -48,10 +46,9 @@ pipeline.unpack()
 
 # 7c. Optional: Save the schema, so you can reuse (and manually edit) it
 schema = pipeline.get_default_schema()
-schema_yaml = schema.as_yaml()
-f = open(schema_file_path, "a")
-f.write(schema_yaml)
-f.close()
+schema_yaml = schema.as_yaml(remove_default_hints=True)
+with open(schema_file_path, 'w') as f:
+    f.write(schema_yaml)
 
 # 8a. Load
 pipeline.load()

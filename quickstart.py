@@ -14,7 +14,7 @@ schema_name = 'example'
 parent_table = 'json_doc'
 
 # 4e. Specify your schema file location
-schema_file_path = "schema.yml"
+schema_file_path = 'schema.yml'
 
 # 4f. Load credentials for Google BigQuery
 with open('credentials.json', 'r') as f:

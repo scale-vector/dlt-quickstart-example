@@ -35,7 +35,7 @@ pipeline.create_pipeline(credentials)
 # pipeline.create_pipeline(credentials, schema=schema)
 
 # 6a. Load JSON document into a dictionary
-with open('data.json', 'r') as f:
+with open('data.json', 'r', encoding="utf-8") as f:
     data = json.load(f)
 
 # 7a. Extract the dictionary (as an iterator) into SQL table
@@ -46,7 +46,7 @@ pipeline.unpack()
 
 # 7c. Optional: Save the schema, so you can reuse (and manually edit) it
 schema = pipeline.get_default_schema()
-schema_yaml = schema.as_yaml(remove_default_hints=True)
+schema_yaml = schema.as_yaml(remove_defaults=True)
 with open(schema_file_path, 'w') as f:
     f.write(schema_yaml)
 
@@ -83,9 +83,9 @@ with pipeline.sql_client() as c:
     # Join previous two queries via auto generated keys
     query = f"""
         select p.name, p.age, p.id as parent_id,
-            c.name as child_name, c.id as child_id, c._pos as child_order_in_list
+            c.name as child_name, c.id as child_id, c._dlt_list_idx as child_order_in_list
         from `{schema_prefix}_example.json_doc` as p
         left join `{schema_prefix}_example.json_doc__children`  as c
-            on p._record_hash = c._parent_hash
+            on p._dlt_id = c._dlt_parent_id
     """
     run_query(query)
